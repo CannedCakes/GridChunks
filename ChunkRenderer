@@ -1,0 +1,38 @@
+using UnityEngine;
+
+public class SimpleChunkRenderer : MonoBehaviour
+{
+    public GameObject tilePrefab; // A prefab with a SpriteRenderer using the default square sprite.
+    public int chunkWidth = 100;
+    public int chunkHeight = 100;
+    private Chunk chunkData;
+
+    // Call this method from your ChunkManager with seed and chunkCoord.
+    public void Init(int seed, Vector2Int chunkCoord)
+    {
+        chunkData = new Chunk(seed, chunkCoord);
+        RenderChunk();
+    }
+
+    void RenderChunk()
+    {
+        for (int x = 0; x < chunkWidth; x++)
+        {
+            for (int y = 0; y < chunkHeight; y++)
+            {
+                // Instantiate a new tile.
+                GameObject tileGO = Instantiate(tilePrefab, transform);
+                tileGO.transform.localPosition = new Vector3(x, y, 0);
+                
+                // Get the SpriteRenderer.
+                SpriteRenderer sr = tileGO.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    // Example: color the tile based on your noise value or tile type.
+                    // Here, we assume chunkData.tiles[x,y] is 1 for wall and 0 for floor.
+                    sr.color = (chunkData.tiles[x, y] == 1) ? Color.black : Color.white;
+                }
+            }
+        }
+    }
+}
